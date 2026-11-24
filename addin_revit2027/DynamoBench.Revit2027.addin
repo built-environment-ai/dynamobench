@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>DynamoBench Revit 2027</Name>
+    <Assembly>DynamoBench.Revit2027.dll</Assembly>
+    <AddInId>8F4B2C91-3D6E-4A12-9B7C-5E10D4F8A201</AddInId>
+    <FullClassName>DynamoBench.Revit2027.DynamoBenchApp</FullClassName>
+    <VendorId>BEAI</VendorId>
+    <VendorDescription>Built Environment AI Initiative (built-environment-ai.org)</VendorDescription>
+  </AddIn>
+</RevitAddIns>
