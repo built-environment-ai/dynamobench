@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1.0",
+  "run_id": "task_001_room_extraction_6a450659",
+  "timestamp_utc": "2026-11-24T16:35:38.732099+00:00",
+  "task_id": "task_001_room_extraction",
+  "candidate_workflow": {
+    "filename": "silent_fail_task_001.dyn",
+    "sha256": "7a796825566a4d0b63ea94b376e513a97d4a464dbfb4468487ac5a2a876f0971",
+    "label": "llm_buggy_no_unit_or_level_filter",
+    "generator": "simulated_llm_baseline"
+  },
+  "environment": {
+    "revit_version": "2027",
+    "dynamo_version": "3.x",
+    "revit_locale": "French",
+    "dynamo_packages": [],
+    "seed_model_filename": "seed_aerohabitat_v1.rvt",
+    "seed_model_sha256": "b57878b15d196a6d0cadec1c0233bc7c2d8315adec9b38150f3d36716903b568"
+  },
+  "execution": {
+    "execution_passed": true,
+    "node_error_count": 0,
+    "node_warning_count": 0,
+    "duration_ms": 13.81,
+    "warnings": [],
+    "errors": []
+  },
+  "verification": {
+    "semantic_passed": false,
+    "silent_failure": true,
+    "expected_count": 1,
+    "actual_count": 6,
+    "matched_count": 0,
+    "missing_count": 0,
+    "unexpected_count": 5,
+    "duplicate_count": 0,
+    "value_mismatch_count": 1
+  },
+  "discrepancies": {
+    "missing_records": [],
+    "unexpected_records": [
+      {
+        "number": "1",
+        "name": "Pièce",
+        "area_m2": 69.319582,
+        "reason": "Room is on 'L01 - First Floor', not target level. Room area 6.44 m² does not exceed 20.0 m²."
+      },
+      {
+        "number": "3",
+        "name": "Pièce",
+        "area_m2": 116.357853,
+        "reason": "Room is on 'L01 - First Floor', not target level. Room area 10.809998 m² does not exceed 20.0 m²."
+      },
+      {
+        "number": "4",
+        "name": "Pièce",
+        "area_m2": 86.64949,
+        "reason": "Room is on 'L01 - First Floor', not target level. Room area 8.050001 m² does not exceed 20.0 m²."
+      },
+      {
+        "number": "5",
+        "name": "Pièce",
+        "area_m2": 37.135482,
+        "reason": "Room is on 'L01 - First Floor', not target level. Room area 3.449999 m² does not exceed 20.0 m²."
+      },
+      {
+        "number": "7",
+        "name": "Pièce",
+        "area_m2": 84.389067,
+        "reason": "Room area 7.840001 m² does not exceed 20.0 m²."
+      }
+    ],
+    "duplicate_records": [],
+    "incorrect_values": [
+      {
+        "number": "8",
+        "field": "area_m2",
+        "expected": 31.799997,
+        "actual": 342.292322,
+        "abs_diff": 310.492325,
+        "tolerance": 0.01
+      }
+    ]
+  },
+  "failure_categories": [
+    "AREA_UNIT_OR_THRESHOLD_ERROR",
+    "WRONG_LEVEL_FILTER"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "task_id": "task_002_thermal_zone_writeback",
+  "version": "0.1.0",
+  "title": "Thermal Zone Classification Write-Back to Room Department Parameter",
+  "category": "model_mutation_parameter_write",
+  "difficulty": "medium",
+  "target_revit_version": "2027",
+  "seed_model": {
+    "filename": "seed_aerohabitat_v1.rvt",
+    "sha256": "b57878b15d196a6d0cadec1c0233bc7c2d8315adec9b38150f3d36716903b568"
+  },
+  "prompt": "Classify all placed, enclosed rooms across the entire Revit model by metric area and write the thermal zone code into the Room Department (Service) built-in parameter inside a Revit Transaction: set 'TZ_LARGE_LIVING' for rooms with area >= 20.0 m2, and 'TZ_COMPACT_CELL' for enclosed rooms with area < 20.0 m2. Leave unenclosed rooms (area == 0.0 m2) unmodified.",
+  "parameters": {
+    "target_category": "OST_Rooms",
+    "target_built_in_parameter": "ROOM_DEPARTMENT",
+    "area_threshold_m2": 20.0,
+    "large_zone_label": "TZ_LARGE_LIVING",
+    "compact_zone_label": "TZ_COMPACT_CELL",
+    "require_placed": true,
+    "require_enclosed": true,
+    "leave_unenclosed_untouched": true
+  },
+  "output_contract": {
+    "required_fields": [
+      "number",
+      "level",
+      "area_m2",
+      "department"
+    ],
+    "field_types": {
+      "number": "string",
+      "level": "string",
+      "area_m2": "number",
+      "department": "string"
+    },
+    "primary_key": "number",
+    "allow_duplicates": false,
+    "order_sensitive": false
+  },
+  "tolerances": {
+    "area_m2_abs": 0.01
+  },
+  "verification_rules": {
+    "verify_post_execution_revit_state": true,
+    "require_transaction_commit": true,
+    "forbid_unenclosed_modification": true
+  }
+}

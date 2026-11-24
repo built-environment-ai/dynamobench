@@ -1,0 +1,50 @@
+[
+  {
+    "number": "1",
+    "level": "L01 - First Floor",
+    "area_m2": 6.44,
+    "department": "TZ_COMPACT_CELL"
+  },
+  {
+    "number": "2",
+    "level": "L01 - First Floor",
+    "area_m2": 0.0,
+    "department": ""
+  },
+  {
+    "number": "3",
+    "level": "L01 - First Floor",
+    "area_m2": 10.809998,
+    "department": "TZ_COMPACT_CELL"
+  },
+  {
+    "number": "4",
+    "level": "L01 - First Floor",
+    "area_m2": 8.050001,
+    "department": "TZ_COMPACT_CELL"
+  },
+  {
+    "number": "5",
+    "level": "L01 - First Floor",
+    "area_m2": 3.449999,
+    "department": "TZ_COMPACT_CELL"
+  },
+  {
+    "number": "6",
+    "level": "L01 - First Floor",
+    "area_m2": 0.0,
+    "department": ""
+  },
+  {
+    "number": "7",
+    "level": "L00 - Ground Floor",
+    "area_m2": 7.840001,
+    "department": "TZ_COMPACT_CELL"
+  },
+  {
+    "number": "8",
+    "level": "L00 - Ground Floor",
+    "area_m2": 31.799997,
+    "department": "TZ_LARGE_LIVING"
+  }
+]

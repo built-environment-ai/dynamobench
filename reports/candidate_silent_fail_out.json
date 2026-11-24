@@ -1,0 +1,42 @@
+{
+  "execution": {
+    "execution_passed": true,
+    "node_error_count": 0,
+    "node_warning_count": 0,
+    "duration_ms": 13.81,
+    "warnings": [],
+    "errors": []
+  },
+  "records": [
+    {
+      "number": "1",
+      "name": "Pièce",
+      "area_m2": 69.319582
+    },
+    {
+      "number": "3",
+      "name": "Pièce",
+      "area_m2": 116.357853
+    },
+    {
+      "number": "4",
+      "name": "Pièce",
+      "area_m2": 86.64949
+    },
+    {
+      "number": "5",
+      "name": "Pièce",
+      "area_m2": 37.135482
+    },
+    {
+      "number": "7",
+      "name": "Pièce",
+      "area_m2": 84.389067
+    },
+    {
+      "number": "8",
+      "name": "Pièce",
+      "area_m2": 342.292322
+    }
+  ]
+}

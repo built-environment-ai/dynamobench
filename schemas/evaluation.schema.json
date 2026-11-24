@@ -1,0 +1,111 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://built-environment-ai.org/schemas/dynamobench/evaluation.schema.json",
+  "title": "DynamoBench Evaluation Report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "timestamp_utc",
+    "task_id",
+    "candidate_workflow",
+    "environment",
+    "execution",
+    "verification",
+    "discrepancies",
+    "failure_categories"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "0.1.0" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "timestamp_utc": { "type": "string", "format": "date-time" },
+    "task_id": { "type": "string", "minLength": 1 },
+    "candidate_workflow": {
+      "type": "object",
+      "required": ["filename", "sha256", "label"],
+      "properties": {
+        "filename": { "type": "string" },
+        "sha256": { "type": "string" },
+        "label": { "type": "string" },
+        "generator": { "type": "string" }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "required": ["revit_version", "dynamo_version", "revit_locale", "seed_model_filename", "seed_model_sha256"],
+      "properties": {
+        "revit_version": { "type": "string" },
+        "dynamo_version": { "type": "string" },
+        "revit_locale": { "type": "string" },
+        "dynamo_packages": { "type": "array", "items": { "type": "string" } },
+        "seed_model_filename": { "type": "string" },
+        "seed_model_sha256": { "type": "string" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": ["execution_passed", "node_error_count", "node_warning_count", "duration_ms"],
+      "properties": {
+        "execution_passed": { "type": "boolean" },
+        "node_error_count": { "type": "integer", "minimum": 0 },
+        "node_warning_count": { "type": "integer", "minimum": 0 },
+        "duration_ms": { "type": "number", "minimum": 0 },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "errors": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "semantic_passed",
+        "silent_failure",
+        "expected_count",
+        "actual_count",
+        "matched_count",
+        "missing_count",
+        "unexpected_count",
+        "duplicate_count",
+        "value_mismatch_count"
+      ],
+      "properties": {
+        "semantic_passed": { "type": "boolean" },
+        "silent_failure": { "type": "boolean" },
+        "expected_count": { "type": "integer", "minimum": 0 },
+        "actual_count": { "type": "integer", "minimum": 0 },
+        "matched_count": { "type": "integer", "minimum": 0 },
+        "missing_count": { "type": "integer", "minimum": 0 },
+        "unexpected_count": { "type": "integer", "minimum": 0 },
+        "duplicate_count": { "type": "integer", "minimum": 0 },
+        "value_mismatch_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "discrepancies": {
+      "type": "object",
+      "required": ["missing_records", "unexpected_records", "duplicate_records", "incorrect_values"],
+      "properties": {
+        "missing_records": { "type": "array", "items": { "type": "object" } },
+        "unexpected_records": { "type": "array", "items": { "type": "object" } },
+        "duplicate_records": { "type": "array", "items": { "type": "object" } },
+        "incorrect_values": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "failure_categories": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "NONE",
+          "EXECUTION_NODE_ERROR",
+          "EXECUTION_NODE_WARNING",
+          "MISSING_QUALIFYING_RECORDS",
+          "UNEXPECTED_NON_QUALIFYING_RECORDS",
+          "WRONG_LEVEL_FILTER",
+          "AREA_UNIT_OR_THRESHOLD_ERROR",
+          "PARAMETER_VALUE_MISMATCH",
+          "DUPLICATE_RECORDS",
+          "SCHEMA_OR_TYPE_ERROR"
+        ]
+      }
+    }
+  }
+}

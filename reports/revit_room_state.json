@@ -1,0 +1,103 @@
+{
+  "schema_version": "0.1.0",
+  "extracted_at_utc": "2026-11-24T16:27:28.456469+00:00",
+  "environment": {
+    "revit_version": "2027",
+    "revit_build": "27.3.0.28",
+    "revit_locale": "French",
+    "model_title": "seed_aerohabitat_v1",
+    "model_path": "C:\\Users\\e-hbe\\dynamobench_v1\\benchmark\\models\\seed_aerohabitat_v1.rvt",
+    "model_sha256": "b57878b15d196a6d0cadec1c0233bc7c2d8315adec9b38150f3d36716903b568"
+  },
+  "total_room_count": 8,
+  "rooms": [
+    {
+      "unique_id": "4d0195e6-726c-49e2-87d3-a87546a27138-00042cfb",
+      "element_id": 273659,
+      "number": "7",
+      "name": "Pièce",
+      "level": "L00 - Ground Floor",
+      "area_sqft_internal": 84.389067,
+      "area_m2": 7.840001,
+      "is_placed": true,
+      "is_enclosed": true
+    },
+    {
+      "unique_id": "4d0195e6-726c-49e2-87d3-a87546a27138-00042cff",
+      "element_id": 273663,
+      "number": "8",
+      "name": "Pièce",
+      "level": "L00 - Ground Floor",
+      "area_sqft_internal": 342.292322,
+      "area_m2": 31.799997,
+      "is_placed": true,
+      "is_enclosed": true
+    },
+    {
+      "unique_id": "4d0195e6-726c-49e2-87d3-a87546a27138-00042ce6",
+      "element_id": 273638,
+      "number": "1",
+      "name": "Pièce",
+      "level": "L01 - First Floor",
+      "area_sqft_internal": 69.319582,
+      "area_m2": 6.44,
+      "is_placed": true,
+      "is_enclosed": true
+    },
+    {
+      "unique_id": "4d0195e6-726c-49e2-87d3-a87546a27138-00042ce9",
+      "element_id": 273641,
+      "number": "2",
+      "name": "Pièce",
+      "level": "L01 - First Floor",
+      "area_sqft_internal": 0.0,
+      "area_m2": 0.0,
+      "is_placed": false,
+      "is_enclosed": false
+    },
+    {
+      "unique_id": "4d0195e6-726c-49e2-87d3-a87546a27138-00042cec",
+      "element_id": 273644,
+      "number": "3",
+      "name": "Pièce",
+      "level": "L01 - First Floor",
+      "area_sqft_internal": 116.357853,
+      "area_m2": 10.809998,
+      "is_placed": true,
+      "is_enclosed": true
+    },
+    {
+      "unique_id": "4d0195e6-726c-49e2-87d3-a87546a27138-00042cef",
+      "element_id": 273647,
+      "number": "4",
+      "name": "Pièce",
+      "level": "L01 - First Floor",
+      "area_sqft_internal": 86.64949,
+      "area_m2": 8.050001,
+      "is_placed": true,
+      "is_enclosed": true
+    },
+    {
+      "unique_id": "4d0195e6-726c-49e2-87d3-a87546a27138-00042cf2",
+      "element_id": 273650,
+      "number": "5",
+      "name": "Pièce",
+      "level": "L01 - First Floor",
+      "area_sqft_internal": 37.135482,
+      "area_m2": 3.449999,
+      "is_placed": true,
+      "is_enclosed": true
+    },
+    {
+      "unique_id": "4d0195e6-726c-49e2-87d3-a87546a27138-00042cf5",
+      "element_id": 273653,
+      "number": "6",
+      "name": "Pièce",
+      "level": "L01 - First Floor",
+      "area_sqft_internal": 0.0,
+      "area_m2": 0.0,
+      "is_placed": false,
+      "is_enclosed": false
+    }
+  ]
+}

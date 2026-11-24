@@ -1,0 +1,49 @@
+{
+  "task_id": "task_001_room_extraction",
+  "version": "0.1.0",
+  "title": "Revit Room Extraction and Filtering by Level and Area",
+  "category": "element_filtering_and_extraction",
+  "difficulty": "basic",
+  "target_revit_version": "2027",
+  "seed_model": {
+    "filename": "seed_aerohabitat_v1.rvt",
+    "sha256": "b57878b15d196a6d0cadec1c0233bc7c2d8315adec9b38150f3d36716903b568"
+  },
+  "prompt": "Extract all placed, enclosed rooms on L00 - Ground Floor whose area exceeds 20.0 square meters, returning room number, name, and area in square meters.",
+  "parameters": {
+    "target_level_names": [
+      "L00 - Ground Floor"
+    ],
+    "area_operator": "strictly_greater_than",
+    "area_threshold_m2": 20.0,
+    "exclude_unplaced_or_unbounded_rooms": true
+  },
+  "output_contract": {
+    "required_fields": [
+      "number",
+      "name",
+      "area_m2"
+    ],
+    "field_types": {
+      "number": "string",
+      "name": "string",
+      "area_m2": "number"
+    },
+    "primary_key": "number",
+    "allow_duplicates": false,
+    "order_sensitive": false
+  },
+  "tolerances": {
+    "area_m2_abs": 0.01
+  },
+  "verification_rules": [
+    "all_qualifying_rooms_present",
+    "no_non_qualifying_rooms_present",
+    "no_other_level_rooms_present",
+    "exact_room_number_match",
+    "exact_trimmed_room_name_match",
+    "area_within_abs_tolerance",
+    "no_duplicate_records",
+    "empty_result_returns_empty_list_without_error"
+  ]
+}

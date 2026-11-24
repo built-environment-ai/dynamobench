@@ -1,0 +1,112 @@
+{
+  "Uuid": "ca920ff5-b146-4872-8aa0-dbbefd82d62b",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "silent_fail_task_001",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Candidate Workflow A: Valid Room Extraction (L00 - Ground Floor, > 20 m²)\r\nimport clr\r\nimport json\r\nimport os\r\nimport time\r\n\r\nt0 = time.perf_counter()\r\nclr.AddReference(\"RevitAPI\")\r\nclr.AddReference(\"RevitServices\")\r\n\r\nfrom Autodesk.Revit.DB import (\r\n    BuiltInCategory,\r\n    BuiltInParameter,\r\n    FilteredElementCollector,\r\n    UnitTypeId,\r\n    UnitUtils,\r\n)\r\nfrom RevitServices.Persistence import DocumentManager\r\n\r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\nout_path = r\"C:\\Users\\e-hbe\\dynamobench_v1\\reports\\candidate_valid_out.json\"\r\n\r\nrecords = []\r\nrooms = (\r\n    FilteredElementCollector(doc)\r\n    .OfCategory(BuiltInCategory.OST_Rooms)\r\n    .WhereElementIsNotElementType()\r\n)\r\n\r\nfor r in rooms:\r\n    if r.Location is None or r.Level is None:\r\n        continue\r\n    if r.Level.Name.strip() != \"L00 - Ground Floor\":\r\n        continue\r\n    area_p = r.get_Parameter(BuiltInParameter.ROOM_AREA)\r\n    raw_sqft = area_p.AsDouble() if (area_p and area_p.HasValue) else 0.0\r\n    if raw_sqft <= 0.0:\r\n        continue\r\n    area_m2 = round(UnitUtils.ConvertFromInternalUnits(raw_sqft, UnitTypeId.SquareMeters), 6)\r\n    if area_m2 > 20.0:\r\n        num_p = r.get_Parameter(BuiltInParameter.ROOM_NUMBER)\r\n        name_p = r.get_Parameter(BuiltInParameter.ROOM_NAME)\r\n        records.append({\r\n            \"number\": num_p.AsString().strip() if num_p and num_p.HasValue else \"\",\r\n            \"name\": name_p.AsString().strip() if name_p and name_p.HasValue else \"\",\r\n            \"area_m2\": area_m2,\r\n        })\r\n\r\nduration_ms = round((time.perf_counter() - t0) * 1000.0, 2)\r\npayload = {\r\n    \"execution\": {\r\n        \"execution_passed\": True,\r\n        \"node_error_count\": 0,\r\n        \"node_warning_count\": 0,\r\n        \"duration_ms\": duration_ms,\r\n        \"warnings\": [],\r\n        \"errors\": [],\r\n    },\r\n    \"records\": records,\r\n}\r\n\r\nos.makedirs(os.path.dirname(out_path), exist_ok=True)\r\nwith open(out_path, \"w\", encoding=\"utf-8\") as f:\r\n    json.dump(payload, f, indent=2, ensure_ascii=False)\r\n\r\nOUT = f\"Saved {len(records)} qualifying room(s) in {duration_ms} ms\"",
+      "Engine": "PythonNet3",
+      "VariableInputPorts": true,
+      "Id": "1b0f4694aac24bdd9e40f12b41ec29c7",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "5a87537224404b6f94809f3841d3b303",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "d370c6e5ad204d41a7824c754c57141e",
+          "Name": "OUT",
+          "Description": "Résultat du script Python",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Exécute un script Python intégré."
+    }
+  ],
+  "Connectors": [],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Propriétés",
+      "Version": "4.2",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "10.3",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "Aucun",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "4.2.1.5887",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Aperçu en arrière-plan",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "1b0f4694aac24bdd9e40f12b41ec29c7",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 311.99999999999994,
+        "Y": 206.4
+      }
+    ],
+    "Annotations": [],
+    "X": 0.0,
+    "Y": 0.0,
+    "Zoom": 1.0
+  }
+}

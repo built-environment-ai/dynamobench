@@ -1,0 +1,158 @@
+{
+  "Uuid": "ca920ff5-b146-4872-8aa0-dbbefd82d62b",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "valid_task_001",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# -*- coding: utf-8 -*-\r\n\"\"\"\r\nDynamoBench Independent Revit API Room State Extractor (Revit 2027 / PythonNet3)\r\nExtracts ALL rooms in the active Revit document directly via Autodesk.Revit.DB\r\nwithout task-specific filtering or Dynamo room wrapper nodes.\r\n\"\"\"\r\nimport clr\r\nimport hashlib\r\nimport json\r\nimport os\r\nfrom datetime import datetime, timezone\r\n\r\nclr.AddReference(\"RevitAPI\")\r\nclr.AddReference(\"RevitServices\")\r\n\r\nfrom Autodesk.Revit.DB import (\r\n    BuiltInCategory,\r\n    BuiltInParameter,\r\n    FilteredElementCollector,\r\n    UnitTypeId,\r\n    UnitUtils,\r\n)\r\nfrom RevitServices.Persistence import DocumentManager\r\n\r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\napp = doc.Application\r\n\r\ndefault_out = r\"C:\\Users\\e-hbe\\dynamobench_v1\\reports\\revit_room_state.json\"\r\noutput_path = IN[0] if (len(IN) > 0 and IN[0]) else default_out\r\n\r\n\r\ndef compute_file_sha256(filepath):\r\n    if not filepath or not os.path.isfile(filepath):\r\n        return \"UNSAVED_OR_CLOUD_MODEL\"\r\n    h = hashlib.sha256()\r\n    with open(filepath, \"rb\") as f:\r\n        for chunk in iter(lambda: f.read(65536), b\"\"):\r\n            h.update(chunk)\r\n    return h.hexdigest()\r\n\r\n\r\ndef get_param_str(elem, bip):\r\n    p = elem.get_Parameter(bip)\r\n    if p is None or not p.HasValue:\r\n        return \"\"\r\n    val = p.AsString()\r\n    return val.strip() if val is not None else \"\"\r\n\r\n\r\ncollector = (\r\n    FilteredElementCollector(doc)\r\n    .OfCategory(BuiltInCategory.OST_Rooms)\r\n    .WhereElementIsNotElementType()\r\n)\r\n\r\nrooms_data = []\r\nfor room in collector:\r\n    area_param = room.get_Parameter(BuiltInParameter.ROOM_AREA)\r\n    raw_area_sqft = area_param.AsDouble() if (area_param and area_param.HasValue) else 0.0\r\n    area_m2 = round(UnitUtils.ConvertFromInternalUnits(raw_area_sqft, UnitTypeId.SquareMeters), 6)\r\n\r\n    level_name = \"\"\r\n    if room.Level is not None:\r\n        level_name = room.Level.Name.strip()\r\n\r\n    rooms_data.append({\r\n        \"unique_id\": room.UniqueId,\r\n        \"element_id\": int(room.Id.Value),\r\n        \"number\": get_param_str(room, BuiltInParameter.ROOM_NUMBER),\r\n        \"name\": get_param_str(room, BuiltInParameter.ROOM_NAME),\r\n        \"level\": level_name,\r\n        \"area_sqft_internal\": round(raw_area_sqft, 6),\r\n        \"area_m2\": area_m2,\r\n        \"is_placed\": room.Location is not None,\r\n        \"is_enclosed\": raw_area_sqft > 0.0,\r\n    })\r\n\r\nrooms_data.sort(key=lambda r: (r[\"level\"], r[\"number\"], r[\"unique_id\"]))\r\n\r\nmodel_path = doc.PathName\r\nsnapshot = {\r\n    \"schema_version\": \"0.1.0\",\r\n    \"extracted_at_utc\": datetime.now(timezone.utc).isoformat(),\r\n    \"environment\": {\r\n        \"revit_version\": str(app.VersionNumber),\r\n        \"revit_build\": str(app.VersionBuild),\r\n        \"revit_locale\": str(app.Language),\r\n        \"model_title\": str(doc.Title),\r\n        \"model_path\": str(model_path),\r\n        \"model_sha256\": compute_file_sha256(model_path),\r\n    },\r\n    \"total_room_count\": len(rooms_data),\r\n    \"rooms\": rooms_data,\r\n}\r\n\r\nos.makedirs(os.path.dirname(output_path), exist_ok=True)\r\nwith open(output_path, \"w\", encoding=\"utf-8\") as f:\r\n    json.dump(snapshot, f, indent=2, ensure_ascii=False)\r\n\r\nOUT = f\"Extracted {len(rooms_data)} rooms to {output_path}\"",
+      "Engine": "PythonNet3",
+      "VariableInputPorts": true,
+      "Id": "4e28cceb71434203ac2a80ffc44d8418",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "22303e58d4b743b3863d26ad114d7dd2",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "43fcb1f608f14f01ad7b03b4332a96ff",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "4c57b22c5728496697248ce68dacf498",
+          "Name": "OUT",
+          "Description": "Résultat du script Python",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Exécute un script Python intégré."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
+      "Id": "6e07e536d6ae433a9c1c1c759e4a920e",
+      "NodeType": "BooleanInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "0c64c3b806ab45e3bbbc741affed0fd9",
+          "Name": "",
+          "Description": "Boolean",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Permet une sélection entre True et False",
+      "InputValue": true
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "0c64c3b806ab45e3bbbc741affed0fd9",
+      "End": "43fcb1f608f14f01ad7b03b4332a96ff",
+      "Id": "b2eeae4516404ba68f86906d42c80c3f",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Propriétés",
+      "Version": "4.2",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "10.3",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "Aucun",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "4.2.1.5887",
+      "RunType": "Manual",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Aperçu en arrière-plan",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "4e28cceb71434203ac2a80ffc44d8418",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 406.3999999999999,
+        "Y": 139.99999999999997
+      },
+      {
+        "Id": "6e07e536d6ae433a9c1c1c759e4a920e",
+        "Name": "Boolean",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 140.00000000000006,
+        "Y": 65.59999999999994
+      }
+    ],
+    "Annotations": [],
+    "X": 0.0,
+    "Y": 0.0,
+    "Zoom": 1.0
+  }
+}

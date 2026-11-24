@@ -1,0 +1,109 @@
+{
+  "schema_version": "0.1.0",
+  "generated_at_utc": "2026-11-24T17:24:14.527289+00:00",
+  "total_runs": 7,
+  "metrics": {
+    "execution_pass_rate": 1.0,
+    "semantic_pass_rate": 0.5714,
+    "silent_failure_rate": 0.4286
+  },
+  "failure_category_counts": {
+    "PARAMETER_VALUE_MISMATCH": 2,
+    "AREA_UNIT_OR_THRESHOLD_ERROR": 1,
+    "WRONG_LEVEL_FILTER": 1
+  },
+  "runs": [
+    {
+      "report_file": "eval_silent_fail_task_001.json",
+      "task_id": "task_001_room_extraction",
+      "label": "llm_buggy_no_unit_or_level_filter",
+      "generator": "simulated_llm_baseline",
+      "execution_passed": true,
+      "semantic_passed": false,
+      "silent_failure": true,
+      "duration_ms": 13.81,
+      "failure_categories": [
+        "AREA_UNIT_OR_THRESHOLD_ERROR",
+        "WRONG_LEVEL_FILTER"
+      ]
+    },
+    {
+      "report_file": "eval_valid_task_001.json",
+      "task_id": "task_001_room_extraction",
+      "label": "valid_reference_dyn",
+      "generator": "human_reference",
+      "execution_passed": true,
+      "semantic_passed": true,
+      "silent_failure": false,
+      "duration_ms": 13.97,
+      "failure_categories": [
+        "NONE"
+      ]
+    },
+    {
+      "report_file": "eval_buggy_task_002.json",
+      "task_id": "task_002_thermal_zone_writeback",
+      "label": "buggy_raw_sqft_unenclosed_dyn",
+      "generator": "synthetic_failure_baseline",
+      "execution_passed": true,
+      "semantic_passed": false,
+      "silent_failure": true,
+      "duration_ms": 44.59,
+      "failure_categories": [
+        "PARAMETER_VALUE_MISMATCH"
+      ]
+    },
+    {
+      "report_file": "eval_llm_task_002.json",
+      "task_id": "task_002_thermal_zone_writeback",
+      "label": "llm_zero_shot_t002",
+      "generator": "llm_baseline",
+      "execution_passed": true,
+      "semantic_passed": true,
+      "silent_failure": false,
+      "duration_ms": 45.95,
+      "failure_categories": [
+        "NONE"
+      ]
+    },
+    {
+      "report_file": "eval_valid_task_002.json",
+      "task_id": "task_002_thermal_zone_writeback",
+      "label": "valid_tx_writeback_dyn",
+      "generator": "human_reference",
+      "execution_passed": true,
+      "semantic_passed": true,
+      "silent_failure": false,
+      "duration_ms": 46.93,
+      "failure_categories": [
+        "NONE"
+      ]
+    },
+    {
+      "report_file": "eval_buggy_task_005.json",
+      "task_id": "task_005_sensor_anchor_placement",
+      "label": "buggy_raw_feet_3d_sensor_dyn_t005",
+      "generator": "synthetic_failure_baseline",
+      "execution_passed": true,
+      "semantic_passed": false,
+      "silent_failure": true,
+      "duration_ms": 33.45,
+      "failure_categories": [
+        "PARAMETER_VALUE_MISMATCH"
+      ]
+    },
+    {
+      "report_file": "eval_valid_task_005.json",
+      "task_id": "task_005_sensor_anchor_placement",
+      "label": "valid_3d_sensor_placement_dyn_t005",
+      "generator": "human_reference",
+      "execution_passed": true,
+      "semantic_passed": true,
+      "silent_failure": false,
+      "duration_ms": 5236.24,
+      "failure_categories": [
+        "NONE"
+      ]
+    }
+  ]
+}

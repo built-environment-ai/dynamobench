@@ -1,0 +1,112 @@
+{
+  "Uuid": "aa5b7312-7a57-4edf-bee3-135b4bda1a7d",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "valid_task_005",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Reference Workflow (Task 005): Metric 3D Sensor Anchor Placement on L00 - Ground Floor\r\nimport clr\r\nimport json\r\nimport os\r\nimport time\r\n\r\nt0 = time.perf_counter()\r\nclr.AddReference(\"RevitAPI\")\r\nclr.AddReference(\"RevitServices\")\r\n\r\nfrom System.Collections.Generic import List\r\nfrom Autodesk.Revit.DB import (\r\n    BuiltInCategory,\r\n    BuiltInParameter,\r\n    CurveLoop,\r\n    DirectShape,\r\n    ElementId,\r\n    FilteredElementCollector,\r\n    GeometryCreationUtilities,\r\n    GeometryObject,\r\n    Line,\r\n    Transaction,\r\n    UnitTypeId,\r\n    UnitUtils,\r\n    XYZ,\r\n)\r\nfrom RevitServices.Persistence import DocumentManager\r\n\r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\nexec_meta_path = r\"C:\\Users\\e-hbe\\dynamobench_v1\\reports\\candidate_valid_t005_exec.json\"\r\n\r\nTARGET_LEVEL = \"L00 - Ground Floor\"\r\nSIZE_FT = UnitUtils.ConvertToInternalUnits(0.20, UnitTypeId.Meters)\r\nHALF_FT = SIZE_FT / 2.0\r\nHEIGHT_ABOVE_FLOOR_FT = UnitUtils.ConvertToInternalUnits(1.50, UnitTypeId.Meters)\r\n\r\nrooms = (\r\n    FilteredElementCollector(doc)\r\n    .OfCategory(BuiltInCategory.OST_Rooms)\r\n    .WhereElementIsNotElementType()\r\n)\r\n\r\nplaced_count = 0\r\nt = Transaction(doc, \"DynamoBench Task 005: Place 3D Sensor Anchors\")\r\nt.Start()\r\ntry:\r\n    for r in rooms:\r\n        if r.Level is None or r.Level.Name.strip() != TARGET_LEVEL:\r\n            continue\r\n        area_p = r.get_Parameter(BuiltInParameter.ROOM_AREA)\r\n        raw_area = area_p.AsDouble() if (area_p and area_p.HasValue) else 0.0\r\n        if raw_area <= 0.0:\r\n            continue\r\n        bb = r.get_BoundingBox(None)\r\n        if bb is None:\r\n            continue\r\n\r\n        num_p = r.get_Parameter(BuiltInParameter.ROOM_NUMBER)\r\n        room_num = num_p.AsString().strip() if (num_p and num_p.HasValue and num_p.AsString()) else \"\"\r\n\r\n        cx_ft = (bb.Min.X + bb.Max.X) / 2.0\r\n        cy_ft = (bb.Min.Y + bb.Max.Y) / 2.0\r\n        z_bottom_ft = r.Level.Elevation + HEIGHT_ABOVE_FLOOR_FT - HALF_FT\r\n\r\n        p0 = XYZ(cx_ft - HALF_FT, cy_ft - HALF_FT, z_bottom_ft)\r\n        p1 = XYZ(cx_ft + HALF_FT, cy_ft - HALF_FT, z_bottom_ft)\r\n        p2 = XYZ(cx_ft + HALF_FT, cy_ft + HALF_FT, z_bottom_ft)\r\n        p3 = XYZ(cx_ft - HALF_FT, cy_ft + HALF_FT, z_bottom_ft)\r\n\r\n        loop = CurveLoop()\r\n        loop.Append(Line.CreateBound(p0, p1))\r\n        loop.Append(Line.CreateBound(p1, p2))\r\n        loop.Append(Line.CreateBound(p2, p3))\r\n        loop.Append(Line.CreateBound(p3, p0))\r\n\r\n        loops = List[CurveLoop]()\r\n        loops.Add(loop)\r\n        solid = GeometryCreationUtilities.CreateExtrusionGeometry(loops, XYZ.BasisZ, SIZE_FT)\r\n\r\n        ds = DirectShape.CreateElement(doc, ElementId(BuiltInCategory.OST_GenericModel))\r\n        geom = List[GeometryObject]()\r\n        geom.Add(solid)\r\n        ds.SetShape(geom)\r\n        ds.Name = f\"DynamoBench_Sensor_{room_num}\"\r\n\r\n        mark_p = ds.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)\r\n        if mark_p and not mark_p.IsReadOnly:\r\n            mark_p.Set(f\"SENSOR_{room_num}\")\r\n\r\n        placed_count += 1\r\n    t.Commit()\r\nexcept Exception:\r\n    if t.HasStarted():\r\n        t.RollBack()\r\n    raise\r\n\r\nduration_ms = round((time.perf_counter() - t0) * 1000.0, 2)\r\nos.makedirs(os.path.dirname(exec_meta_path), exist_ok=True)\r\nwith open(exec_meta_path, \"w\", encoding=\"utf-8\") as f:\r\n    json.dump({\r\n        \"execution\": {\r\n            \"execution_passed\": True,\r\n            \"node_error_count\": 0,\r\n            \"node_warning_count\": 0,\r\n            \"duration_ms\": duration_ms,\r\n            \"warnings\": [],\r\n            \"errors\": [],\r\n        }\r\n    }, f, indent=2)\r\n\r\nOUT = f\"Placed {placed_count} 3D sensor anchors in {duration_ms} ms\"",
+      "Engine": "PythonNet3",
+      "VariableInputPorts": true,
+      "Id": "41bd9bab9e304ac1b3d4f04cb4e61004",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "f777c57542474037950e2b1d291d7a31",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "5264efb903e3458195a6b037b203a15d",
+          "Name": "OUT",
+          "Description": "Résultat du script Python",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Exécute un script Python intégré."
+    }
+  ],
+  "Connectors": [],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "EnableLegacyPolyCurveBehavior": true,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Propriétés",
+      "Version": "4.2",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "10.3",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "Aucun",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "4.2.1.5887",
+      "RunType": "Manual",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Aperçu en arrière-plan",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "41bd9bab9e304ac1b3d4f04cb4e61004",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 226.39999999999992,
+        "Y": 172.79999999999998
+      }
+    ],
+    "Annotations": [],
+    "X": 0.0,
+    "Y": 0.0,
+    "Zoom": 1.0
+  }
+}

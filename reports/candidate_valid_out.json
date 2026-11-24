@@ -1,0 +1,17 @@
+{
+  "execution": {
+    "execution_passed": true,
+    "node_error_count": 0,
+    "node_warning_count": 0,
+    "duration_ms": 13.97,
+    "warnings": [],
+    "errors": []
+  },
+  "records": [
+    {
+      "number": "8",
+      "name": "Pièce",
+      "area_m2": 31.799997
+    }
+  ]
+}

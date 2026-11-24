@@ -1,0 +1,112 @@
+{
+  "Uuid": "ddc801ce-fcba-458d-9302-8c3e1024962d",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "valid_task_004",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# -*- coding: utf-8 -*-\r\nimport clr\r\nimport hashlib\r\nimport json\r\nimport os\r\nfrom datetime import datetime, timezone\r\n\r\nclr.AddReference(\"RevitAPI\")\r\nclr.AddReference(\"RevitServices\")\r\n\r\nfrom Autodesk.Revit.DB import (\r\n    BuiltInCategory,\r\n    BuiltInParameter,\r\n    FilteredElementCollector,\r\n    UnitTypeId,\r\n    UnitUtils,\r\n)\r\nfrom RevitServices.Persistence import DocumentManager\r\n\r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\napp = doc.Application\r\n\r\ndyn_in = globals().get(\"IN\", [])\r\ndefault_out = r\"C:\\Users\\e-hbe\\dynamobench_v1\\reports\\post_mutation_room_state.json\"\r\noutput_path = dyn_in[0] if (len(dyn_in) > 0 and dyn_in[0]) else default_out\r\n\r\n\r\ndef compute_file_sha256(filepath):\r\n    if not filepath or not os.path.isfile(filepath):\r\n        return \"UNSAVED_OR_CLOUD_MODEL\"\r\n    h = hashlib.sha256()\r\n    with open(filepath, \"rb\") as f:\r\n        for chunk in iter(lambda: f.read(65536), b\"\"):\r\n            h.update(chunk)\r\n    return h.hexdigest()\r\n\r\n\r\ndef get_param_str(elem, bip):\r\n    p = elem.get_Parameter(bip)\r\n    if p is None or not p.HasValue:\r\n        return \"\"\r\n    val = p.AsString()\r\n    return val.strip() if val is not None else \"\"\r\n\r\n\r\ncollector = (\r\n    FilteredElementCollector(doc)\r\n    .OfCategory(BuiltInCategory.OST_Rooms)\r\n    .WhereElementIsNotElementType()\r\n)\r\n\r\nrecords = []\r\nfor room in collector:\r\n    area_param = room.get_Parameter(BuiltInParameter.ROOM_AREA)\r\n    raw_area_sqft = area_param.AsDouble() if (area_param and area_param.HasValue) else 0.0\r\n    area_m2 = round(UnitUtils.ConvertFromInternalUnits(raw_area_sqft, UnitTypeId.SquareMeters), 6)\r\n    level_name = room.Level.Name.strip() if room.Level is not None else \"\"\r\n\r\n    records.append({\r\n        \"number\": get_param_str(room, BuiltInParameter.ROOM_NUMBER),\r\n        \"level\": level_name,\r\n        \"area_m2\": area_m2,\r\n        \"department\": get_param_str(room, BuiltInParameter.ROOM_DEPARTMENT),\r\n    })\r\n\r\nrecords.sort(key=lambda r: r[\"number\"])\r\n\r\nsnapshot = {\r\n    \"schema_version\": \"0.1.0\",\r\n    \"task_id\": \"task_002_thermal_zone_writeback\",\r\n    \"extracted_at_utc\": datetime.now(timezone.utc).isoformat(),\r\n    \"environment\": {\r\n        \"revit_version\": str(app.VersionNumber),\r\n        \"revit_locale\": str(app.Language),\r\n        \"model_title\": str(doc.Title),\r\n        \"model_sha256\": compute_file_sha256(doc.PathName),\r\n    },\r\n    \"execution\": {\r\n        \"execution_passed\": True,\r\n        \"node_error_count\": 0,\r\n        \"node_warning_count\": 0,\r\n        \"duration_ms\": 0.0,\r\n        \"warnings\": [],\r\n        \"errors\": [],\r\n    },\r\n    \"records\": records,\r\n}\r\n\r\nos.makedirs(os.path.dirname(output_path), exist_ok=True)\r\nwith open(output_path, \"w\", encoding=\"utf-8\") as f:\r\n    json.dump(snapshot, f, indent=2, ensure_ascii=False)\r\n\r\nOUT = f\"Verified post-mutation state for {len(records)} rooms -> {output_path}\"",
+      "Engine": "PythonNet3",
+      "VariableInputPorts": true,
+      "Id": "74fe9acce8e44750a9850dc6c9e23035",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "340aa664d271438ba69897fa2300f189",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "b1f20d955f5a456fa590a371a6ccba9a",
+          "Name": "OUT",
+          "Description": "Résultat du script Python",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Exécute un script Python intégré."
+    }
+  ],
+  "Connectors": [],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "EnableLegacyPolyCurveBehavior": true,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Propriétés",
+      "Version": "4.2",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "10.3",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "Aucun",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "4.2.1.5887",
+      "RunType": "Manual",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Aperçu en arrière-plan",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "74fe9acce8e44750a9850dc6c9e23035",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 299.2,
+        "Y": 251.2
+      }
+    ],
+    "Annotations": [],
+    "X": 0.0,
+    "Y": 0.0,
+    "Zoom": 1.0
+  }
+}

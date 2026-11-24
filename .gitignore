@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+reports/post_*.json
+reports/candidate_*_exec.json

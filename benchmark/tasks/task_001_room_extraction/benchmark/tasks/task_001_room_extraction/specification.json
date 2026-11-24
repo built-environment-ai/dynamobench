@@ -1,0 +1,43 @@
+{
+  "task_id": "task_001_room_extraction",
+  "version": "0.1.0",
+  "title": "Revit Room Extraction and Filtering by Level and Area",
+  "category": "element_filtering_and_extraction",
+  "difficulty": "basic",
+  "target_revit_version": "2027",
+  "seed_model": {
+    "filename": "seed_residential_v1.rvt",
+    "sha256": "PENDING_SEED_MODEL_CREATION"
+  },
+  "prompt": "Extract all rooms on Level 2 with an area greater than 20 m². Return their room number, name and area.",
+  "parameters": {
+    "target_level_names": ["Level 2", "Niveau 2"],
+    "area_operator": "strictly_greater_than",
+    "area_threshold_m2": 20.0,
+    "exclude_unplaced_or_unbounded_rooms": true
+  },
+  "output_contract": {
+    "required_fields": ["number", "name", "area_m2"],
+    "field_types": {
+      "number": "string",
+      "name": "string",
+      "area_m2": "number"
+    },
+    "primary_key": "number",
+    "allow_duplicates": false,
+    "order_sensitive": false
+  },
+  "tolerances": {
+    "area_m2_abs": 0.01
+  },
+  "verification_rules": [
+    "all_qualifying_rooms_present",
+    "no_non_qualifying_rooms_present",
+    "no_other_level_rooms_present",
+    "exact_room_number_match",
+    "exact_trimmed_room_name_match",
+    "area_within_abs_tolerance",
+    "no_duplicate_records",
+    "empty_result_returns_empty_list_without_error"
+  ]
+}

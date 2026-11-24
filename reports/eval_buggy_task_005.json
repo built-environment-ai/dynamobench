@@ -1,0 +1,77 @@
+{
+  "schema_version": "0.1.0",
+  "run_id": "task_005_sensor_anchor_placement_f8e2b4bd",
+  "timestamp_utc": "2026-11-24T17:21:42.291576+00:00",
+  "task_id": "task_005_sensor_anchor_placement",
+  "candidate_workflow": {
+    "filename": "buggy_task_005.dyn",
+    "sha256": "bd0965753993ea6a21dd61ac7c38c19dc517d12cc206f2cfa9b12d9cfb5e2cd8",
+    "label": "buggy_raw_feet_3d_sensor_dyn_t005",
+    "generator": "synthetic_failure_baseline"
+  },
+  "environment": {
+    "revit_version": "2027",
+    "dynamo_version": "3.x",
+    "revit_locale": "French",
+    "dynamo_packages": [],
+    "seed_model_filename": "seed_aerohabitat_v1.rvt",
+    "seed_model_sha256": "b57878b15d196a6d0cadec1c0233bc7c2d8315adec9b38150f3d36716903b568"
+  },
+  "execution": {
+    "execution_passed": true,
+    "node_error_count": 0,
+    "node_warning_count": 0,
+    "duration_ms": 33.45,
+    "warnings": [],
+    "errors": []
+  },
+  "verification": {
+    "semantic_passed": false,
+    "silent_failure": true,
+    "expected_count": 2,
+    "actual_count": 2,
+    "matched_count": 0,
+    "missing_count": 0,
+    "unexpected_count": 0,
+    "duplicate_count": 0,
+    "value_mismatch_count": 4
+  },
+  "discrepancies": {
+    "missing_records": [],
+    "unexpected_records": [],
+    "duplicate_records": [],
+    "incorrect_values": [
+      {
+        "field": "z_m",
+        "expected": 1.5,
+        "actual": 0.4572,
+        "abs_diff": 1.0428,
+        "tolerance": 0.01
+      },
+      {
+        "field": "size_m",
+        "expected": 0.2,
+        "actual": 0.061,
+        "abs_diff": 0.139,
+        "tolerance": 0.01
+      },
+      {
+        "field": "z_m",
+        "expected": 1.5,
+        "actual": 0.4572,
+        "abs_diff": 1.0428,
+        "tolerance": 0.01
+      },
+      {
+        "field": "size_m",
+        "expected": 0.2,
+        "actual": 0.061,
+        "abs_diff": 0.139,
+        "tolerance": 0.01
+      }
+    ]
+  },
+  "failure_categories": [
+    "PARAMETER_VALUE_MISMATCH"
+  ]
+}

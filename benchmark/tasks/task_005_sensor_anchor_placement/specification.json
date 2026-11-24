@@ -1,0 +1,52 @@
+{
+  "task_id": "task_005_sensor_anchor_placement",
+  "version": "0.1.0",
+  "title": "3D Sensor Anchor Placement on Ground Floor",
+  "category": "geometry_and_element_creation",
+  "difficulty": "medium",
+  "target_revit_version": "2027",
+  "seed_model": {
+    "filename": "seed_aerohabitat_v1.rvt",
+    "sha256": "b57878b15d196a6d0cadec1c0233bc7c2d8315adec9b38150f3d36716903b568"
+  },
+  "prompt": "Place a 0.20 m x 0.20 m x 0.20 m Generic Model DirectShape sensor anchor centered horizontally in each placed, enclosed room on L00 - Ground Floor at 1.50 m above floor elevation, tagged with ALL_MODEL_MARK = SENSOR_{room_number}.",
+  "parameters": {
+    "target_level": "L00 - Ground Floor",
+    "sensor_size_m": 0.2,
+    "mount_height_m": 1.5
+  },
+  "output_contract": {
+    "required_fields": [
+      "number",
+      "mark",
+      "x_m",
+      "y_m",
+      "z_m",
+      "size_m"
+    ],
+    "field_types": {
+      "number": "string",
+      "mark": "string",
+      "x_m": "number",
+      "y_m": "number",
+      "z_m": "number",
+      "size_m": "number"
+    },
+    "primary_key": "number",
+    "allow_duplicates": false,
+    "order_sensitive": false
+  },
+  "tolerances": {
+    "area_m2_abs": 0.01,
+    "x_m": 0.01,
+    "y_m": 0.01,
+    "z_m": 0.01,
+    "size_m": 0.01,
+    "coordinate_m": 0.01
+  },
+  "verification_rules": {
+    "verify_post_execution_revit_state": true,
+    "require_transaction_commit": true,
+    "forbid_unenclosed_modification": true
+  }
+}

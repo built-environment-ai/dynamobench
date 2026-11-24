@@ -1,0 +1,84 @@
+{
+  "schema_version": "0.1.0",
+  "run_id": "task_002_thermal_zone_writeback_3bb64385",
+  "timestamp_utc": "2026-11-24T16:58:49.570846+00:00",
+  "task_id": "task_002_thermal_zone_writeback",
+  "candidate_workflow": {
+    "filename": "buggy_task_002.dyn",
+    "sha256": "fb1ec08102927a3dea8b9fd7fe35016f15931cdde1dd62ec124174a38e152557",
+    "label": "buggy_raw_sqft_unenclosed_dyn",
+    "generator": "synthetic_failure_baseline"
+  },
+  "environment": {
+    "revit_version": "2027",
+    "dynamo_version": "3.x",
+    "revit_locale": "French",
+    "dynamo_packages": [],
+    "seed_model_filename": "seed_aerohabitat_v1.rvt",
+    "seed_model_sha256": "b57878b15d196a6d0cadec1c0233bc7c2d8315adec9b38150f3d36716903b568"
+  },
+  "execution": {
+    "execution_passed": true,
+    "node_error_count": 0,
+    "node_warning_count": 0,
+    "duration_ms": 44.59,
+    "warnings": [],
+    "errors": []
+  },
+  "verification": {
+    "semantic_passed": false,
+    "silent_failure": true,
+    "expected_count": 8,
+    "actual_count": 8,
+    "matched_count": 1,
+    "missing_count": 0,
+    "unexpected_count": 0,
+    "duplicate_count": 0,
+    "value_mismatch_count": 7
+  },
+  "discrepancies": {
+    "missing_records": [],
+    "unexpected_records": [],
+    "duplicate_records": [],
+    "incorrect_values": [
+      {
+        "field": "department",
+        "expected": "TZ_COMPACT_CELL",
+        "actual": "TZ_LARGE_LIVING"
+      },
+      {
+        "field": "department",
+        "expected": "",
+        "actual": "TZ_COMPACT_CELL"
+      },
+      {
+        "field": "department",
+        "expected": "TZ_COMPACT_CELL",
+        "actual": "TZ_LARGE_LIVING"
+      },
+      {
+        "field": "department",
+        "expected": "TZ_COMPACT_CELL",
+        "actual": "TZ_LARGE_LIVING"
+      },
+      {
+        "field": "department",
+        "expected": "TZ_COMPACT_CELL",
+        "actual": "TZ_LARGE_LIVING"
+      },
+      {
+        "field": "department",
+        "expected": "",
+        "actual": "TZ_COMPACT_CELL"
+      },
+      {
+        "field": "department",
+        "expected": "TZ_COMPACT_CELL",
+        "actual": "TZ_LARGE_LIVING"
+      }
+    ]
+  },
+  "failure_categories": [
+    "PARAMETER_VALUE_MISMATCH"
+  ]
+}
