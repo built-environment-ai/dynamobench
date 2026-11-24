@@ -4,3 +4,8 @@ __pycache__/
 .DS_Store
 reports/post_*.json
 reports/candidate_*_exec.json
+
+# Revit backup models, local build artifacts, and generated snapshots
+benchmark/models/*.00*.rvt
+dist/
+reports/revit2027_*.json
